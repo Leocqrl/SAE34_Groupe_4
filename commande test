@@ -1,0 +1,69 @@
+# Commandes de Test et de Gestion
+
+Ce fichier regroupe les commandes utiles pour gérer et tester l'infrastructure.
+
+## 🚀 Démarrage et Arrêt
+
+Démarrer tous les services en arrière-plan :
+```bash
+docker compose up -d
+```
+
+Arrêter tous les services :
+```bash
+docker compose down
+```
+
+Voir les logs d'un service spécifique (ex: vpn) :
+```bash
+docker compose logs -f vpn
+```
+
+## 🔍 Vérification des Services
+
+### DNS (BIND9)
+Tester la résolution de nom depuis votre machine hôte (Mac) :
+```bash
+dig @localhost -p 20053 vpn.lab.local
+```
+
+Tester depuis le conteneur :
+```bash
+docker exec dns_server dig @localhost vpn.lab.local
+```
+
+### NTP (Chrony)
+Vérifier l'état de la synchronisation :
+```bash
+docker exec ntp_server chronyc tracking
+```
+
+### RADIUS (FreeRADIUS)
+Tester l'authentification (User: `steve`, Pass: `testing` - Fichier Users) :
+```bash
+docker exec radius_server radtest steve testing localhost 0 testing123
+```
+
+Tester l'authentification SQL (User: `sqluser`, Pass: `sqlpassword` - PostgreSQL) :
+```bash
+docker exec radius_server radtest sqluser sqlpassword localhost 0 testing123
+```
+*Si vous obtenez `Access-Accept`, c'est que ça fonctionne.*
+
+### VPN (OpenVPN)
+Vérifier que le serveur a bien démarré (rechercher "Initialization Sequence Completed") :
+```bash
+docker logs vpn_server | grep "Initialization Sequence Completed"
+```
+
+## 🛠️ Maintenance
+
+Accéder au shell d'un conteneur (ex: DNS) :
+```bash
+docker exec -it dns_server bash
+```
+
+Redémarrer un service spécifique (ex: RADIUS) :
+```bash
+docker compose restart radius
+```
