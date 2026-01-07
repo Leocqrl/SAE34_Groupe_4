@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  ntp:
+    build: ./ntp
+    cap_add: [ ??? ] # TODO: Droit pour l'heure système ?
+    ports: [ "???:???/udp" ] # TODO: Port NTP ?
+  dns:
+    build: ./dns
+    ports: 
+      - "???:???/udp" 
+      - "???:???/tcp" # TODO: Ports DNS ?
+  vpn:
+    build: ./vpn
+    cap_add: [ ??? ] # TODO: Droit pour l'interface TUN ?
+    devices: [ "/dev/net/tun" ]
+    ports: [ "1194:1194/udp" ] 
+
+  postgres:
+    build: ./postgres
+    environment:
+      POSTGRES_PASSWORD: ???
+    volumes: [ "pg-data:/var/lib/postgresql/data" ]
+
+  radius:
+    build: ./radius
+    ports: [ "1812:1812/udp" ]
+    depends_on: [ ??? ] # TODO: Ordre de démarrage ?
+    environment:
+      DB_HOST: ??? # TODO: Nom du service DB ?
+
+  networks: { pop-net: {} }
+  volumes: { pg-data: {} }
