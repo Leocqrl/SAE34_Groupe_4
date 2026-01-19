@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM debian:trixie-slim
 
 RUN apt-get update && apt-get install -y chrony && rm -rf /var/lib/apt/lists/*
 

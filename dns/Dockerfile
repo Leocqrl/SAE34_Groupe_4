@@ -1,1 +1,1 @@
-FROM: debian:trixie-slim
+FROM debian:trixie-slim

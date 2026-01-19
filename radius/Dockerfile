@@ -13,4 +13,6 @@ COPY raddb/ /etc/freeradius/3.0/
 RUN chown -R freerad:freerad /etc/freeradius/3.0 \
     && chmod -R 755 /etc/freeradius/3.0
 
+EXPOSE 1812/udp 21812/udp
+
 CMD ["freeradius","-X"]

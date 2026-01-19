@@ -11,4 +11,10 @@ server default {
             pap
         }
     }
+
+    listen {
+    type = auth
+    ipaddr = *
+    port = 1812
+}
 }
