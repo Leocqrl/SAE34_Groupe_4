@@ -9,16 +9,6 @@ services:
     networks:
       lab_net:
         ipv4_address: 172.28.0.4
-
-  dns:
-    build: ./dns
-    container_name: dns_server
-    ports: 
-      - "20053:53/udp" 
-      - "20053:53/tcp" # TODO: Ports DNS ?
-    networks:
-      lab_net:
-        ipv4_address: 172.28.0.5
   
   vpn:
     build: ./vpn
@@ -67,6 +57,16 @@ services:
       lab_net:
         ipv4_address: 172.28.0.3
 
+  dns:
+    build: ./dns
+    container_name: dns_server
+    ports: 
+      - "20053:53/udp" 
+      - "20053:53/tcp" # TODO: Ports DNS ?
+    networks:
+      lab_net:
+        ipv4_address: 172.28.0.5
+  
 networks:
   lab_net:
     driver: bridge
