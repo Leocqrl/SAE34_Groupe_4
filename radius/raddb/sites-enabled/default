@@ -1,0 +1,20 @@
+server default {
+
+    authorize {
+        preprocess
+        sql
+        pap
+    }
+
+    authenticate {
+        Auth-Type PAP {
+            pap
+        }
+    }
+
+    listen {
+    type = auth
+    ipaddr = *
+    port = 1812
+}
+}

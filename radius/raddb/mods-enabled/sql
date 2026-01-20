@@ -1,0 +1,30 @@
+sql {
+    driver = "rlm_sql_postgresql"
+    dialect = "postgresql"
+    server = "postgres_db"
+    port = 5432
+    login = "radius"
+    password = "radiuspass"
+    radius_db = "radius"
+
+    # On définit uniquement la table dont on a besoin
+    authcheck_table = "radcheck"
+
+    # --- AU LIEU DU $INCLUDE, ON MET LA REQUÊTE DIRECTEMENT ---
+    # Cette requête est celle qui va chercher "steve" dans votre table
+    authorize_check_query = "SELECT id, username, attribute, value, op \
+      FROM ${authcheck_table} \
+      WHERE username = '%{User-Name}' \
+      ORDER BY id"
+
+    # On désactive les autres fonctions pour éviter les erreurs au démarrage
+    read_groups = no
+    read_profiles = no
+    pool {
+        start = 5
+        min = 5
+        max = 10
+        spare = 3
+        idle_timeout = 60
+    }
+}

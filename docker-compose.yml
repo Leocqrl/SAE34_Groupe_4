@@ -9,16 +9,6 @@ services:
     networks:
       lab_net:
         ipv4_address: 172.28.0.4
-
-  dns:
-    build: ./dns
-    container_name: dns_server
-    ports: 
-      - "2053:53/udp" 
-      - "2053:53/tcp" # TODO: Ports DNS ?
-    networks:
-      lab_net:
-        ipv4_address: 172.28.0.5
   
   vpn:
     build: ./vpn
@@ -39,23 +29,44 @@ services:
     build: ./postgres
     container_name: postgres_db
     environment:
-      POSTGRES_PASSWORD: "???" # A definir
+      POSTGRES_PASSWORD: "postgres" # A definir
     volumes: 
       - "pg-data:/var/lib/postgresql/data"
+      - "./radius/init_db.sql:/docker-entrypoint-initdb.d/init.sql"
+    networks:
+      lab_net:
+        ipv4_address: 172.28.0.10
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
   radius:
     build: ./radius
     container_name: radius_server
     ports: 
       - "21812:1812/udp"
-    depends_on:  # TODO: Ordre de démarrage ?
-      - postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
     environment:
       DB_HOST: postgres_db # TODO: Nom du service DB ?
     networks:
       lab_net:
         ipv4_address: 172.28.0.3
 
+  dns:
+    build: ./dns
+    container_name: dns_server
+    ports: 
+      - "20053:53/udp" 
+      - "20053:53/tcp" # TODO: Ports DNS ?
+    networks:
+      lab_net:
+        ipv4_address: 172.28.0.5
+  
 networks:
   lab_net:
     driver: bridge

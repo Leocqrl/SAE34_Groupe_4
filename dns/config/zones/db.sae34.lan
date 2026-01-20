@@ -1,0 +1,14 @@
+$TTL 86400
+@   IN  SOA dns.sae34.lan. admin.sae34.lan. (
+        2026011901
+        3600
+        1800
+        604800
+        86400
+)
+
+@       IN  NS  dns.sae34.lan.
+dns     IN  A   172.28.0.5
+ntp     IN  A   172.28.0.4
+radius  IN  A   172.28.0.3
+vpn     IN  A   172.28.0.2
